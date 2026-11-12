@@ -243,7 +243,6 @@
                       task.nextAt ? h('span', null, '下次 ' + formatDateTime(task.nextAt)) : null,
                       task.lastRunAt ? h('span', null, '上次 ' + formatDateTime(task.lastRunAt)) : null,
                     ),
-                    task.legacyTool ? h('div', { className: 'kg-muted' }, '由旧版「数学宇宙」创建：仍通过 math_universe 兼容工具收录到学习模式。') : null,
                   ),
                   h('button', { type: 'button', className: 'kg-btn kg-btn-sm', disabled: busy === task.id || !model.scheduleAvailable, onClick: () => run(task) }, busy === task.id ? '触发中…' : '▶ 立即运行'),
                   h('button', { type: 'button', className: cx('kg-btn kg-btn-sm', confirmId === task.id && 'kg-btn-danger'), onClick: () => remove(task), onBlur: () => setConfirmId('') }, confirmId === task.id ? '确认删除' : '删除'),

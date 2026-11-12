@@ -29,7 +29,6 @@
       const [detail, setDetail] = useState({ id: '', trail: [] })
       const [dialog, setDialog] = useState('')
       const [refreshing, setRefreshing] = useState(false)
-      const [migrationSeen, setMigrationSeen] = usePref('migrationSeen', 'no')
 
       useEffect(() => {
         const onFocus = () => store.load()
@@ -163,9 +162,6 @@
             : null,
         ),
         error ? h('div', { className: 'kg-error-bar', role: 'alert' }, '刷新失败，当前显示的是上一次的数据。', h('button', { type: 'button', className: 'kg-link-btn', onClick: refresh }, '重试')) : null,
-        model.migratedFrom && migrationSeen !== 'yes'
-          ? h('div', { className: 'kg-info-bar' }, '✨ 已从「数学宇宙」迁移全部数据：原有卡片归入「学习」模式，原数据文件保留未动。', h('span', { className: 'kg-grow' }), h('button', { type: 'button', className: 'kg-link-btn', onClick: () => setMigrationSeen('yes') }, '知道了'))
-          : null,
         h('div', { className: cx('kg-content', view === 'star' && 'is-star') }, content),
         selectMode && view === 'board'
           ? h(

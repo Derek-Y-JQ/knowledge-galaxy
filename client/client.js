@@ -385,7 +385,6 @@ window.__ModuleLoader__.load({
         scheduleTasks: snapshot.scheduleTasks || [],
         scheduleAvailable: snapshot.scheduleAvailable !== false,
         presetPacks: snapshot.presetPacks || [],
-        migratedFrom: snapshot.migratedFrom || null,
       }
       return model
     }
@@ -4101,7 +4100,6 @@ window.__ModuleLoader__.load({
                       task.nextAt ? h('span', null, '下次 ' + formatDateTime(task.nextAt)) : null,
                       task.lastRunAt ? h('span', null, '上次 ' + formatDateTime(task.lastRunAt)) : null,
                     ),
-                    task.legacyTool ? h('div', { className: 'kg-muted' }, '由旧版「数学宇宙」创建：仍通过 math_universe 兼容工具收录到学习模式。') : null,
                   ),
                   h('button', { type: 'button', className: 'kg-btn kg-btn-sm', disabled: busy === task.id || !model.scheduleAvailable, onClick: () => run(task) }, busy === task.id ? '触发中…' : '▶ 立即运行'),
                   h('button', { type: 'button', className: cx('kg-btn kg-btn-sm', confirmId === task.id && 'kg-btn-danger'), onClick: () => remove(task), onBlur: () => setConfirmId('') }, confirmId === task.id ? '确认删除' : '删除'),
@@ -4145,7 +4143,6 @@ window.__ModuleLoader__.load({
       const [detail, setDetail] = useState({ id: '', trail: [] })
       const [dialog, setDialog] = useState('')
       const [refreshing, setRefreshing] = useState(false)
-      const [migrationSeen, setMigrationSeen] = usePref('migrationSeen', 'no')
 
       useEffect(() => {
         const onFocus = () => store.load()
@@ -4279,9 +4276,6 @@ window.__ModuleLoader__.load({
             : null,
         ),
         error ? h('div', { className: 'kg-error-bar', role: 'alert' }, '刷新失败，当前显示的是上一次的数据。', h('button', { type: 'button', className: 'kg-link-btn', onClick: refresh }, '重试')) : null,
-        model.migratedFrom && migrationSeen !== 'yes'
-          ? h('div', { className: 'kg-info-bar' }, '✨ 已从「数学宇宙」迁移全部数据：原有卡片归入「学习」模式，原数据文件保留未动。', h('span', { className: 'kg-grow' }), h('button', { type: 'button', className: 'kg-link-btn', onClick: () => setMigrationSeen('yes') }, '知道了'))
-          : null,
         h('div', { className: cx('kg-content', view === 'star' && 'is-star') }, content),
         selectMode && view === 'board'
           ? h(

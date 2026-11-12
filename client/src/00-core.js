@@ -376,7 +376,6 @@
         scheduleTasks: snapshot.scheduleTasks || [],
         scheduleAvailable: snapshot.scheduleAvailable !== false,
         presetPacks: snapshot.presetPacks || [],
-        migratedFrom: snapshot.migratedFrom || null,
       }
       return model
     }

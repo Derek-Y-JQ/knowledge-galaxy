@@ -58,7 +58,6 @@ dsh plugin --profile web list                               # 确认已出现 kn
 | `itemIds` `linkLabel` `linkNote` | `link` 用 |
 | `limit` | `list` 用，默认 20，最大 100 |
 
-`math_universe` 是参数相同的兼容别名，未指定 `mode` 时默认学习模式。
 
 ## HTTP API（前缀 `/knowledge-galaxy/api`）
 
