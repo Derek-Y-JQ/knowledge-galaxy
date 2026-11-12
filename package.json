@@ -1,6 +1,6 @@
 {
   "name": "knowledge-galaxy",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "知识银河 — DeepSeek Harness 知识收录看板插件：学习 / 学术 / 日常三种模式，对话收录与定时收录，分组看板与时间轴，单星系星图与跨模式知识联系。",
   "type": "module",
   "icon": "icon.svg",
