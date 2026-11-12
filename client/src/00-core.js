@@ -374,6 +374,7 @@
         countByMode,
         tags,
         scheduleTasks: snapshot.scheduleTasks || [],
+        scheduleCandidates: snapshot.scheduleCandidates || [],
         scheduleAvailable: snapshot.scheduleAvailable !== false,
         presetPacks: snapshot.presetPacks || [],
       }

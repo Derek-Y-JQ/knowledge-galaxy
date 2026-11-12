@@ -181,7 +181,20 @@
       const [creating, setCreating] = useState(false)
       const [busy, setBusy] = useState('')
       const [confirmId, setConfirmId] = useState('')
-      const tasks = model.scheduleTasks.filter((task) => model.enabled.includes(task.mode) && inMode(mode, task.mode))
+      // tasks created outside this page may have no known mode: they show under every tab
+      const tasks = model.scheduleTasks.filter((task) => !task.mode || (model.enabled.includes(task.mode) && inMode(mode, task.mode)))
+      const [adoptMode, setAdoptMode] = useState({})
+      const defaultAdoptMode = mode !== 'all' ? mode : model.enabled[0]
+      const adopt = (candidate) =>
+        mutate('POST', '/schedule/tasks/' + encodeURIComponent(candidate.id) + '/adopt', { mode: adoptMode[candidate.id] || defaultAdoptMode }).then(
+          () => showToast('已关联「' + candidate.title + '」'),
+          (error) => showToast(errorText(error), 'error'),
+        )
+      const unlink = (task) =>
+        mutate('POST', '/schedule/tasks/' + encodeURIComponent(task.id) + '/unlink', {}).then(
+          () => showToast('已取消关联（任务本身仍在 DSH 自动化任务中）'),
+          (error) => showToast(errorText(error), 'error'),
+        )
       const collected = (task) => model.items.filter((item) => item.source === 'scheduled' && ((item.sourceDetail && item.sourceDetail.taskTitle === task.title) || (item.tags || []).includes(task.title))).length
       const run = (task) => {
         setBusy(task.id)
@@ -232,12 +245,21 @@
                   h(
                     'div',
                     { className: 'kg-task-main' },
-                    h('div', { className: 'kg-task-title' }, '⏰ ' + task.title, h(ModeBadge, { mode: task.mode }), h('span', { className: 'kg-pill' }, SCHEDULE_STATUS[task.status] || task.status)),
+                    h(
+                      'div',
+                      { className: 'kg-task-title' },
+                      '⏰ ' + task.title,
+                      task.mode ? h(ModeBadge, { mode: task.mode }) : null,
+                      h('span', { className: 'kg-pill' }, SCHEDULE_STATUS[task.status] || task.status),
+                      task.origin !== 'plugin' ? h('span', { className: 'kg-pill', title: '这个任务不是在本页面创建的，请到 DSH「自动化任务」里修改或删除' }, task.origin === 'adopted' ? '手动关联' : '来自 DSH 自动化任务') : null,
+                    ),
                     h(
                       'div',
                       { className: 'kg-task-meta' },
-                      h('span', null, cadenceText(task)),
-                      h('span', null, '投递到：' + MODE_META[task.mode].label + (category ? ' · ' + category.name + (sub ? ' / ' + sub.name : '（大类内自动匹配）') : '（模式内自动归类）')),
+                      task.time ? h('span', null, cadenceText(task)) : null,
+                      task.origin === 'plugin'
+                        ? h('span', null, '投递到：' + MODE_META[task.mode].label + (category ? ' · ' + category.name + (sub ? ' / ' + sub.name : '（大类内自动匹配）') : '（模式内自动归类）'))
+                        : h('span', null, '投递位置由该任务自己的提示词决定'),
                       task.topic ? h('span', null, '主题：' + task.topic) : null,
                       h('span', null, '已收录 ' + collected(task) + ' 条'),
                       task.nextAt ? h('span', null, '下次 ' + formatDateTime(task.nextAt)) : null,
@@ -245,12 +267,45 @@
                     ),
                   ),
                   h('button', { type: 'button', className: 'kg-btn kg-btn-sm', disabled: busy === task.id || !model.scheduleAvailable, onClick: () => run(task) }, busy === task.id ? '触发中…' : '▶ 立即运行'),
-                  h('button', { type: 'button', className: cx('kg-btn kg-btn-sm', confirmId === task.id && 'kg-btn-danger'), onClick: () => remove(task), onBlur: () => setConfirmId('') }, confirmId === task.id ? '确认删除' : '删除'),
+                  task.origin === 'plugin'
+                    ? h('button', { type: 'button', className: cx('kg-btn kg-btn-sm', confirmId === task.id && 'kg-btn-danger'), onClick: () => remove(task), onBlur: () => setConfirmId('') }, confirmId === task.id ? '确认删除' : '删除')
+                    : task.origin === 'adopted'
+                      ? h('button', { type: 'button', className: 'kg-btn kg-btn-sm', onClick: () => unlink(task) }, '取消关联')
+                      : null,
                 )
               }),
             )
           : creating
             ? null
             : h(EmptyState, { icon: '⏰', title: '还没有定时收录任务', hint: '例如：把「每日 ArXiv 强化学习论文速递」绑定到学术模式，把「每周宏观经济与美股复盘」绑定到日常模式的金融研究。' }),
+        model.scheduleCandidates.length
+          ? h(
+              'details',
+              { className: 'kg-origin', open: !tasks.length },
+              h('summary', null, 'DSH 里的其他定时任务（' + model.scheduleCandidates.length + '）—— 如果其中有用知识银河收录的任务，可以关联到这里显示'),
+              h(
+                'ul',
+                { className: 'kg-tasks kg-candidates' },
+                model.scheduleCandidates.map((candidate) =>
+                  h(
+                    'li',
+                    { key: candidate.id, className: 'kg-task' },
+                    h('div', { className: 'kg-task-main' }, h('div', { className: 'kg-task-title' }, candidate.title, h('span', { className: 'kg-pill' }, SCHEDULE_STATUS[candidate.status] || candidate.status))),
+                    model.enabled.length > 1
+                      ? h(Select, {
+                          bare: true,
+                          className: 'kg-select-sm',
+                          'aria-label': '对应模式',
+                          value: adoptMode[candidate.id] || defaultAdoptMode,
+                          onChange: (value) => setAdoptMode(Object.assign({}, adoptMode, { [candidate.id]: value })),
+                          options: model.enabled.map((entry) => ({ value: entry, label: MODE_META[entry].label + '模式' })),
+                        })
+                      : null,
+                    h('button', { type: 'button', className: 'kg-btn kg-btn-sm', onClick: () => adopt(candidate) }, '关联到本页'),
+                  ),
+                ),
+              ),
+            )
+          : null,
       )
     }

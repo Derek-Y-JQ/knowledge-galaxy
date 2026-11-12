@@ -280,6 +280,7 @@ a.kg-btn{text-decoration:none}
 .kg-schedule-form{padding:14px;border:1px solid var(--kg-line);border-radius:12px;background:var(--kg-layer)}
 .kg-tasks{display:flex;flex-direction:column;gap:8px}
 .kg-task{display:flex;align-items:center;gap:10px;padding:10px 12px;border:1px solid var(--kg-line);border-radius:12px}
+.kg-candidates{margin-top:8px}
 .kg-task-main{flex:1 1 auto;min-width:0;display:flex;flex-direction:column;gap:4px}
 .kg-task-title{display:flex;align-items:center;gap:8px;font-weight:650;flex-wrap:wrap}
 .kg-task-meta{display:flex;flex-wrap:wrap;gap:2px 14px;color:var(--kg-text2);font-size:12px}
