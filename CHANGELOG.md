@@ -1,9 +1,7 @@
 # 更新记录
 
-## 1.0.0 — 首个发布版本（数学宇宙 → 知识银河）
+## 1.0.0 — 首个版本（知识银河）
 
-- 插件更名：`math-universe` → `knowledge-galaxy`；Agent 工具 `knowledge_galaxy`（保留 `math_universe` 兼容别名）；API 前缀 `/knowledge-galaxy/api`。
-- 首次启动自动从 `~/.dsh/storages/math-universe/state.json` 迁移到 `~/.dsh/storages/knowledge-galaxy/state.json`，原文件保留不动；原有卡片与自定义类目归入「学习」模式。
 - 三种模式（学习 / 学术 / 日常）+「全部」，各自独立的分类树；设置中心（模式开关、数学模板开关、默认着陆页）。
 - 分类管理：按模式隔离、自定义大类/子类可编辑、预置模板可隐藏、删除时可迁移或清空、三个一键预设包。
 - 收录：模式自动预判、学术模式文献元数据、定时任务绑定投递模式与目标分类，自动归类按模式隔离。
