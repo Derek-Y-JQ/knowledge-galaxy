@@ -16,17 +16,7 @@ dsh plugin --profile web add /绝对路径/knowledge-galaxy     # 必须是绝�
 dsh plugin --profile web list                               # 确认已出现 knowledge-galaxy
 ```
 
-也可以在 DSH Desktop 的「插件管理器 → 从本地路径安装」里填入该目录的绝对路径。安装后重启 DSH 或刷新页面：侧栏出现「知识银河」入口，助手回答下方出现「🌌 收录到知识银河」，Agent 获得 `knowledge_galaxy` 工具。无需 `npm install`，插件没有第三方依赖。
-
-## 从数学宇宙升级
-
-1. 卸载旧插件，再按「安装」一节装上新插件，然后重启 DSH 或刷新页面：
-   ```bash
-   dsh plugin --profile web remove math-universe
-   ```
-2. 首次启动时，若 `~/.dsh/storages/knowledge-galaxy/state.json` 不存在，会自动读取 `~/.dsh/storages/math-universe/state.json` 并写出新文件；**旧文件不会被修改或删除**，可作为备份。
-3. 迁移规则：原有卡片、联系、自定义大类/子类全部保留，并归入「学习」模式；卡片状态初始为「待理解」。
-4. 旧的定时任务提示词里写的是 `math_universe` 工具：插件保留了这个名字作为兼容别名（默认收录到学习模式），所以旧任务继续可用；建议之后在「定时收录」里重建为绑定模式的新任务。
+也可以在 DSH Desktop 的「插件管理器 → 从本地路径安装」里填入该目录的绝对路径。安装后重启 DSH 或刷新页面：侧栏出现「知识银河」入口，助手回答下方出现「🌌 收录到知识银河」，Agent 获得 `knowledge_galaxy` 工具。无需 `npm install`，插件没有第三方依赖。或直接将本链接发送给 Deepseek Harness 使其自动安装。
 
 ## 模式
 
