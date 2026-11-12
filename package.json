@@ -1,0 +1,57 @@
+{
+  "name": "knowledge-galaxy",
+  "version": "1.0.0",
+  "description": "知识银河 — DeepSeek Harness 知识收录看板插件：学习 / 学术 / 日常三种模式，对话收录与定时收录，分组看板与时间轴，单星系星图与跨模式知识联系。",
+  "type": "module",
+  "icon": "icon.svg",
+  "main": "lib/index.js",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Derek-Y-JQ/knowledge-galaxy.git"
+  },
+  "homepage": "https://github.com/Derek-Y-JQ/knowledge-galaxy",
+  "keywords": [
+    "dsh",
+    "dsh-plugin",
+    "deepseek-harness",
+    "knowledge-base",
+    "kanban",
+    "papers",
+    "mathematics"
+  ],
+  "files": [
+    "lib",
+    "client",
+    "cordis.patch.yml",
+    "icon.svg",
+    "README.md",
+    "CHANGELOG.md"
+  ],
+  "exports": {
+    ".": {
+      "default": "./lib/index.js"
+    },
+    "./client": "./client/client.js",
+    "./cordis.patch.yml": "./cordis.patch.yml",
+    "./package.json": "./package.json"
+  },
+  "scripts": {
+    "build": "node client/build.mjs",
+    "check": "node --check client/client.js && node --check lib/index.js"
+  },
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "platform": "web",
+      "inject": [
+        "@deepseek-ai/dsh-client-locale",
+        "@deepseek-ai/dsh-client-ui-session",
+        "@deepseek-ai/dsh-client-ui-conversation",
+        "@deepseek-ai/dsh-client-ui-layout"
+      ]
+    }
+  }
+}

@@ -1,0 +1,6 @@
+# knowledge-galaxy bundle patch: inserts the host plugin row into the profile tree.
+# The browser half is discovered from package.json `dsh.client` by
+# @deepseek-ai/dsh-client-modules; no extra row is needed for it.
+- insert:
+    - id: knowledge-galaxy
+      name: knowledge-galaxy
